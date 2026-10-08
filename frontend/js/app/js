@@ -1,5 +1,38 @@
+let expenses = [];
+
 const expenseForm = document.getElementById("expenseForm");
 const formMessage = document.getElementById("formMessage");
+const expenseBody = document.getElementById("expenseBody");
+
+function addCell(row, text, className) {
+  const td = document.createElement("td");
+  td.textContent = text;
+  if (className) td.className = className;
+  row.appendChild(td);
+}
+
+function renderTable() {
+  expenseBody.innerHTML = "";
+
+  if (expenses.length === 0) {
+    const row = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 4;
+    td.className = "empty";
+    td.textContent = "No expenses yet.";
+    row.appendChild(td);
+    expenseBody.appendChild(row);
+  } else {
+    expenses.forEach(function (exp) {
+      const row = document.createElement("tr");
+      addCell(row, exp.date);
+      addCell(row, exp.description);
+      addCell(row, exp.category);
+      addCell(row, "$" + Number(exp.amount).toFixed(2), "amount");
+      expenseBody.appendChild(row);
+    });
+  }
+}
 
 expenseForm.addEventListener("submit", function (e) {
   e.preventDefault();
@@ -11,7 +44,10 @@ expenseForm.addEventListener("submit", function (e) {
     date: document.getElementById("date").value
   };
 
-  console.log("New expense:", expense);
-  formMessage.textContent = "Expense captured.";
+  expenses.push(expense);
+  renderTable();
+  formMessage.textContent = "Expense added.";
   expenseForm.reset();
 });
+
+renderTable();
