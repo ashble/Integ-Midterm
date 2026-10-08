@@ -4,6 +4,16 @@ const expenseForm = document.getElementById("expenseForm");
 const formMessage = document.getElementById("formMessage");
 const expenseBody = document.getElementById("expenseBody");
 
+let selectedCategory = "All";
+const categoryFilter = document.getElementById("categoryFilter");
+
+function getFilteredExpenses() {
+  if (selectedCategory === "All") return expenses;
+  return expenses.filter(function (exp) {
+    return exp.category === selectedCategory;
+  });
+}
+
 function addCell(row, text, className) {
   const td = document.createElement("td");
   td.textContent = text;
@@ -11,19 +21,25 @@ function addCell(row, text, className) {
   row.appendChild(td);
 }
 
+categoryFilter.addEventListener("change", function () {
+  selectedCategory = categoryFilter.value;
+  renderTable();
+});
+
 function renderTable() {
+  const list = getFilteredExpenses();
   expenseBody.innerHTML = "";
 
-  if (expenses.length === 0) {
+  if (list.length === 0) {
     const row = document.createElement("tr");
     const td = document.createElement("td");
     td.colSpan = 4;
     td.className = "empty";
-    td.textContent = "No expenses yet.";
+    td.textContent = "No expenses found.";
     row.appendChild(td);
     expenseBody.appendChild(row);
   } else {
-    expenses.forEach(function (exp) {
+    list.forEach(function (exp) {
       const row = document.createElement("tr");
       addCell(row, exp.date);
       addCell(row, exp.description);
