@@ -124,3 +124,35 @@ def update_expense(expense_id):
             "category": category
         }
     }), 200
+
+# DELETE EXPENSE
+
+@expense_routes.route("/api/expenses/<int:expense_id>", methods=["DELETE"])
+def delete_expense(expense_id):
+
+    connection = get_db_connection()
+
+    expense = connection.execute("""
+        SELECT * FROM expenses
+        WHERE id = ?
+    """, (expense_id,)).fetchone()
+
+    if not expense:
+        connection.close()
+
+        return jsonify({
+            "error": "Expense not found."
+        }), 404
+
+    connection.execute("""
+        DELETE FROM expenses
+        WHERE id = ?
+    """, (expense_id,))
+
+    connection.commit()
+
+    connection.close()
+
+    return jsonify({
+        "message": "Expense deleted successfully."
+    }), 200
