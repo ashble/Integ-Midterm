@@ -56,7 +56,9 @@ function renderTable() {
       expenseBody.appendChild(row);
     });
   }
+  updateTotal(list);
 }
+
 
 expenseForm.addEventListener("submit", function (e) {
   e.preventDefault();
