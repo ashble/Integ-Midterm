@@ -1,0 +1,17 @@
+const expenseForm = document.getElementById("expenseForm");
+const formMessage = document.getElementById("formMessage");
+
+expenseForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const expense = {
+    description: document.getElementById("description").value.trim(),
+    amount: parseFloat(document.getElementById("amount").value),
+    category: document.getElementById("category").value,
+    date: document.getElementById("date").value
+  };
+
+  console.log("New expense:", expense);
+  formMessage.textContent = "Expense captured.";
+  expenseForm.reset();
+});
