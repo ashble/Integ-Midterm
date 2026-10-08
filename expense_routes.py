@@ -42,3 +42,30 @@ def create_expense():
             "category": category
         }
     }), 201
+
+# GET EXPENSES
+
+@expense_routes.route("/api/expenses", methods=["GET"])
+def get_expenses():
+
+    connection = get_db_connection()
+
+    expenses = connection.execute("""
+        SELECT * FROM expenses
+    """).fetchall()
+
+    connection.close()
+
+    expense_list = []
+
+    for expense in expenses:
+        expense_list.append({
+            "id": expense["id"],
+            "description": expense["description"],
+            "amount": expense["amount"],
+            "category": expense["category"]
+        })
+
+    return jsonify({
+        "expenses": expense_list
+    }), 200
