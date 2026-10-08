@@ -72,3 +72,10 @@ th { background: #eef2ff; }
 .toolbar { margin-bottom: 1rem; }
 .toolbar label { margin-top: 0; }
 .toolbar select { max-width: 250px; }
+
+.total {
+  text-align: right;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 1rem 0 0;
+}
