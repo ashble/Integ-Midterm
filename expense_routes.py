@@ -69,3 +69,58 @@ def get_expenses():
     return jsonify({
         "expenses": expense_list
     }), 200
+
+# UPDATE EXPENSE
+
+@expense_routes.route("/api/expenses/<int:expense_id>", methods=["PUT"])
+def update_expense(expense_id):
+
+    data = request.get_json()
+
+    description = data.get("description")
+    amount = data.get("amount")
+    category = data.get("category")
+
+    if not description or amount is None or not category:
+        return jsonify({
+            "error": "Description, amount, and category are required."
+        }), 400
+
+    connection = get_db_connection()
+
+    expense = connection.execute("""
+        SELECT * FROM expenses
+        WHERE id = ?
+    """, (expense_id,)).fetchone()
+
+    if not expense:
+        connection.close()
+
+        return jsonify({
+            "error": "Expense not found."
+        }), 404
+
+    connection.execute("""
+        UPDATE expenses
+        SET description = ?, amount = ?, category = ?
+        WHERE id = ?
+    """, (
+        description,
+        amount,
+        category,
+        expense_id
+    ))
+
+    connection.commit()
+
+    connection.close()
+
+    return jsonify({
+        "message": "Expense updated successfully.",
+        "expense": {
+            "id": expense_id,
+            "description": description,
+            "amount": amount,
+            "category": category
+        }
+    }), 200
