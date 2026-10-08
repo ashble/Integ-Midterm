@@ -1,0 +1,79 @@
+let expenses = [];
+
+const expenseForm = document.getElementById("expenseForm");
+const formMessage = document.getElementById("formMessage");
+const expenseBody = document.getElementById("expenseBody");
+const totalAmount = document.getElementById("totalAmount");
+
+function updateTotal(list) {
+  const total = list.reduce(function (sum, exp) {
+    return sum + Number(exp.amount);
+  }, 0);
+  totalAmount.textContent = total.toFixed(2);
+}
+
+let selectedCategory = "All";
+const categoryFilter = document.getElementById("categoryFilter");
+
+function getFilteredExpenses() {
+  if (selectedCategory === "All") return expenses;
+  return expenses.filter(function (exp) {
+    return exp.category === selectedCategory;
+  });
+}
+
+function addCell(row, text, className) {
+  const td = document.createElement("td");
+  td.textContent = text;
+  if (className) td.className = className;
+  row.appendChild(td);
+}
+
+categoryFilter.addEventListener("change", function () {
+  selectedCategory = categoryFilter.value;
+  renderTable();
+});
+
+function renderTable() {
+  const list = getFilteredExpenses();
+  expenseBody.innerHTML = "";
+
+  if (list.length === 0) {
+    const row = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 4;
+    td.className = "empty";
+    td.textContent = "No expenses found.";
+    row.appendChild(td);
+    expenseBody.appendChild(row);
+  } else {
+    list.forEach(function (exp) {
+      const row = document.createElement("tr");
+      addCell(row, exp.date);
+      addCell(row, exp.description);
+      addCell(row, exp.category);
+      addCell(row, "$" + Number(exp.amount).toFixed(2), "amount");
+      expenseBody.appendChild(row);
+    });
+  }
+  updateTotal(list);
+}
+
+
+expenseForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const expense = {
+    description: document.getElementById("description").value.trim(),
+    amount: parseFloat(document.getElementById("amount").value),
+    category: document.getElementById("category").value,
+    date: document.getElementById("date").value
+  };
+
+  expenses.push(expense);
+  renderTable();
+  formMessage.textContent = "Expense added.";
+  expenseForm.reset();
+});
+
+renderTable();
