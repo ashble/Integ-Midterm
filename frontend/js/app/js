@@ -3,6 +3,14 @@ let expenses = [];
 const expenseForm = document.getElementById("expenseForm");
 const formMessage = document.getElementById("formMessage");
 const expenseBody = document.getElementById("expenseBody");
+const totalAmount = document.getElementById("totalAmount");
+
+function updateTotal(list) {
+  const total = list.reduce(function (sum, exp) {
+    return sum + Number(exp.amount);
+  }, 0);
+  totalAmount.textContent = total.toFixed(2);
+}
 
 let selectedCategory = "All";
 const categoryFilter = document.getElementById("categoryFilter");
