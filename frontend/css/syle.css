@@ -68,3 +68,7 @@ th, td { padding: 0.7rem; text-align: left; border-bottom: 1px solid #e5e7eb; }
 th { background: #eef2ff; }
 .amount { text-align: right; }
 .empty { text-align: center; color: #6b7280; }
+
+.toolbar { margin-bottom: 1rem; }
+.toolbar label { margin-top: 0; }
+.toolbar select { max-width: 250px; }
